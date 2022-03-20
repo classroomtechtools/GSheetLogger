@@ -55,7 +55,6 @@
         // nothing to output, so let's make that explicit
         this.buffer({ message: "Nothing to output, array of length 0 received" });
       }
-
       const rows = this.getDataRangeValues();
       const jsonsToAppend = dottie.rowsToJsons(rows);
 
@@ -76,7 +75,6 @@
       }
       this.sheet.getRange(1, 1, replaceRows.length, total_columns)
           .setValues(replaceRows);
-
       // reset
       this.jsons = [];
     }
@@ -102,40 +100,49 @@
       // only get the sheet once
       if (this.cache.sheet == null) {
         this.cache.sheet = this.ss.getSheetByName(this.sheetName);
+        if (this.cache.sheet == null) {
+          // we have to create it
+          this.cache.sheet = this.ss.insertSheet(this.sheetName);
+        }
       }
       return this.cache.sheet;
     }
 
     output (body, ...params) {
-      const context = ContextManager.create();
-      const self = this;
-      context.head = function () {
-        // re-bind methods in case programmer wants to use this for context
-        this.info = self.buffer.bind(self);
-        this.error = self.error.bind(self);
-        this.warning = self.warning.bind(self);
-      };
-
-      context.body = body;
-
-      context.error = function (err) {
-        console.log(err);  // make sure the programmer can see it in the execution log too!
-        self.buffer({unexpectedError: {message: err.toString(), stack: err.stack}});
-        return null; // silence the error
-      };
-
-      if (params.length == 0 || (params.length > 0 && params[0] !== false)) {
-        context.tail = function () {
-          self.write(...params);
+      if (typeof body !== 'function') {
+        this.buffer(body);  // hopefully it's an object!
+        this.write(...params);
+      } else {
+        const context = ContextManager.create();
+        const self = this;
+        context.head = function () {
+          // re-bind methods in case programmer wants to use this for context
+          this.info = self.buffer.bind(self);
+          this.error = self.error.bind(self);
+          this.warning = self.warning.bind(self);
         };
-      }
 
-      // object will be sent to the the body
-      return context.execute({
-        info: self.buffer.bind(self),
-        error: self.error.bind(self),
-        warning: self.warning.bind(self)
-      });
+        context.body = body;
+
+        context.error = function (err) {
+          console.log(err.stack);  // make sure the programmer can see it in the execution log too!
+          self.buffer({unexpectedError: {message: err.toString(), stack: err.stack}});
+          return null; // silence the error
+        };
+
+        if (params.length == 0 || (params.length > 0 && params[0] !== false)) {
+          context.tail = function () {
+            self.write(...params);
+          };
+        }
+
+        // object will be sent to the the body
+        return context.execute({
+          info: self.buffer.bind(self),
+          error: self.error.bind(self),
+          warning: self.warning.bind(self)
+        });
+      }
     }
   }
 })(this);
