@@ -56,8 +56,9 @@ Less typing! And check out how that runtime error! It ALSO gets logged to the sp
 1. The jsons you pass to be output can be nested objects.
 1. Includes default headers of "timestamp", "level" and "message". Any other properties will become headers
 1. Automatically marks each write with #### in each cell to indicate a new run
-1. If you want a "----" mark instead just call `logger.mark('----')`
-1. You can define the priority headers that appear first. When calling `.write`, or `.output`, just include them:
+2. Even if you change or add properties you send it, the headers update and track across executions.
+3. If you want a "----" mark to signify a write, just call `logger.mark('----')`
+4. You can define the priority headers that appear first. When calling `.write`, or `.output`, just include them:
 ```js
 // ...
 logger.write('third', 'fourth');
