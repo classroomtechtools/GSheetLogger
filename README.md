@@ -41,9 +41,9 @@ But a lot of those direct output statements will bog down the execution time. Wh
 
 ```js
 logger.output(log => {
-  log.info({ message: 'Just telling you something' });
-  log.warning({ message: 'Take note!' });
-  log.error({ message: 'OH NO' });
+  log.info({ message: 'Just telling you something', extra: 1234 });
+  log.warning({ message: 'Take note!', extra: 5442 });
+  log.error({ message: 'OH NO', extra: 336 });
   
   throw new Error("An unexpected error!");
 });
@@ -53,11 +53,11 @@ Less typing! And check out how that runtime error, which normally would  that ge
 
 ## Features
 
-1. Includes default headers of "timestamp", "level" and "message"
-2. Automatically marks each write with #### in each cell 
-3. If you want a "----" mark instead just call `logger.mark('----')`
-4. You can define the priority headers that appear first. When calling `.write`, or `.output`, just include them:
-
+1. The jsons you pass to be output can be nested objects.
+1. Includes default headers of "timestamp", "level" and "message". Any other properties will become headers
+1. Automatically marks each write with #### in each cell to indicate a new run
+1. If you want a "----" mark instead just call `logger.mark('----')`
+1. You can define the priority headers that appear first. When calling `.write`, or `.output`, just include them:
 ```js
 // ...
 logger.write('third', 'fourth');
