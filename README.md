@@ -49,7 +49,7 @@ logger.output(log => {
 });
 ```
 
-Less typing! And check out how that runtime error, which normally would  that gets thrown ALSO gets logged to the spreadsheet. (Oh, and the script keeps executing, how sweet eh?)
+Less typing! And check out how that runtime error! It ALSO gets logged to the spreadsheet. (Oh, and the script keeps executing, how sweet eh?)
 
 ## Features
 
