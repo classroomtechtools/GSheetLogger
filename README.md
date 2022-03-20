@@ -2,6 +2,9 @@
 
 Convert a simple tab in a Google spreadsheet into a logger.
 
+![Alt text](/logger_example.png "Optional Title")
+
+
 ## Getting Started
 
 Script ID: `1hCOnmzCWmR_kAl9P_naUEhHi1-eNtvfuD0E0WQJPnaA-wBOe5v7irGCM`
